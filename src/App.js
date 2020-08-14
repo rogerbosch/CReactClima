@@ -1,6 +1,8 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import Header from "./components/Header";
 import Formulario from "./components/Formulario";
+import Clima from "./components/Clima";
+import Error from "./components/Error";
 
 
 function App() {
@@ -17,7 +19,7 @@ function App() {
     useEffect(() => {
         const consultarAPI = async () => {
 
-            if(consultar) {
+            if (consultar) {
                 const appId = '46d64a2f81e4afb88b5003d08d066bc8';
                 const url = `http://api.openweathermap.org/data/2.5/weather?q=${ciudad},${pais}&appid=${appId}`;
 
@@ -29,7 +31,7 @@ function App() {
 
                 // Detecta si hubo resultados correctos en la consulta
 
-                if(resultado.cod === "404") {
+                if (resultado.cod === "404") {
                     setError(true);
                 } else {
                     setError(false);
@@ -39,8 +41,16 @@ function App() {
         }
         consultarAPI();
         // eslint-disable-next-line
-    },[consultar]);
+    }, [consultar]);
 
+
+    let componente;
+    if (error) {
+        componente = <Error mensaje="No hay resultados"/>
+    } else {
+        componente = <Clima
+            resultado={resultado}/>
+    }
     return (
         <Fragment>
 
@@ -58,7 +68,7 @@ function App() {
                             />
                         </div>
                         <div className="col m6 s12">
-                            2
+                            {componente}
                         </div>
                     </div>
                 </div>
